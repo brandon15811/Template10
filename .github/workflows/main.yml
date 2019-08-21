@@ -1,0 +1,24 @@
+name: ASP.NET Core CI
+
+on: [repository_dispatch, push]
+
+jobs:
+  build:
+
+    runs-on: windows-2016
+    
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+      
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    - name: Nuget Restore
+      run: nuget.exe restore "Samples/Sample Project (16299)/Sample.Prism.Windows.Template10 (16299).csproj"
+      
+    - name: Build App
+      run: |
+        msbuild "Samples/Sample Project (16299)/Sample.Prism.Windows.Template10 (16299).csproj" /t:Build /p:Configuration=Debug /p:Platform=x86 /v:q /nologo
